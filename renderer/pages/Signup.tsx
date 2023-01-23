@@ -26,6 +26,7 @@ const Signup = () => {
         password,
       );
       const { stsTokenManager, uid } = user;
+      console.log(user);
     } catch (err: unknown) {
       console.log(err);
     }

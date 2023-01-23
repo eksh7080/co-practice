@@ -2,10 +2,8 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Heads from "@/components/Heads";
-import { auth } from "@/pbase";
 
 function Home() {
-  console.log(auth, "dd");
   return (
     <>
       <Heads title="Home" />

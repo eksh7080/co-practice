@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Heads from "@/components/Heads";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "@/pbase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/router";
+import { useUserDispatch } from "@/context/authContext";
 
 const Login = () => {
+  const dispatch = useUserDispatch();
+  const router = useRouter();
   const isUserExist = auth.currentUser;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +21,20 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
+  const signIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
+
       localStorage.setItem("token", user.accessToken);
       localStorage.setItem("uid", user.uid);
+
+      if (user) {
+        alert("성공적으로 로그인 되었습니다.");
+        router.push("/home");
+      }
+
+      console.log(user);
     } catch (err: unknown) {
       console.log(err);
     }

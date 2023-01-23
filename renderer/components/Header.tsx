@@ -1,17 +1,73 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/router";
+import { auth } from "@/pbase";
+
+interface UserAuth {
+  token: string | null;
+  uid: string | null;
+}
 
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(auth.currentUser ? false : true);
+
+  const router = useRouter();
+  const [userAuth, setUserAuth] = useState<UserAuth>({
+    token: "" | null,
+    uid: "" | null,
+  });
+
+  useEffect(() => {
+    setUserAuth({
+      token: localStorage.getItem("token"),
+      uid: localStorage.getItem("uid"),
+    });
+  }, [router.pathname]);
+
+  const logout = async () => {
+    await signOut(auth);
+    localStorage.clear();
+    setIsLoggedIn(false);
+    setUserAuth({
+      token: null,
+      uid: null,
+    });
+  };
+
+  console.log(isLoggedIn, auth.currentUser);
+
   return (
     <section className="HContainer">
       <header>
         <nav>
           <ul>
-            <Link href="/Login">
-              <a>로그인</a>
-            </Link>
-            <Link href="/Signup">
-              <a>회원가입</a>
-            </Link>
+            {userAuth.token ? (
+              <>
+                <li onClick={logout}>
+                  <Link href="/home">
+                    <a>로그아웃</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/Userlist">
+                    <a>유저 목록</a>
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link href="/Login">
+                  <a>로그인</a>
+                </Link>
+              </li>
+            )}
+
+            <li>
+              <Link href="/Signup">
+                <a>회원가입</a>
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>
