@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "@/pbase";
+import styled from "styled-components";
 
 interface UserAuth {
   token: string | null;
@@ -26,9 +27,9 @@ const Header = () => {
   }, [router.pathname]);
 
   const logout = async () => {
-    await signOut(auth);
+    const res = await signOut(auth);
+    console.log(res, "ddd");
     localStorage.clear();
-    setIsLoggedIn(false);
     setUserAuth({
       token: null,
       uid: null,

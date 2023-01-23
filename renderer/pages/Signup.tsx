@@ -1,13 +1,16 @@
 import Heads from "@/components/Heads";
-import { auth } from "@/pbase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "@/pbase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { setDoc, serverTimestamp, doc } from "firebase/firestore";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const Signup = () => {
-  const isUserExist = auth.currentUser;
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nickName, setNickName] = useState("");
 
   const emailChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -15,6 +18,10 @@ const Signup = () => {
 
   const passwordChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const nickChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickName(e.target.value);
   };
 
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,8 +32,18 @@ const Signup = () => {
         email,
         password,
       );
-      const { stsTokenManager, uid } = user;
-      console.log(user);
+
+      if (user) {
+        updateProfile(auth.currentUser, { displayName: nickName });
+        setDoc(doc(db, "userInfo", auth.currentUser.uid), {
+          name: nickName,
+          avatar: auth.currentUser.photoURL,
+          createdAt: serverTimestamp(),
+          uid: auth.currentUser.uid,
+        });
+        alert("회원가입이 성공적으로 완료되었습니다.");
+        router.push("/home");
+      }
     } catch (err: unknown) {
       console.log(err);
     }
@@ -45,6 +62,17 @@ const Signup = () => {
             </h1>
             <div className="signWrap">
               <ul>
+                <li>
+                  <label>닉네임</label>
+                  <input
+                    placeholder="닉에임"
+                    name="nickName"
+                    autoComplete="off"
+                    required
+                    onChange={nickChangeValue}
+                  />
+                </li>
+
                 <li>
                   <label>이메일</label>
                   <input
