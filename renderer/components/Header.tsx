@@ -5,45 +5,69 @@ import { useRouter } from "next/router";
 import { auth } from "@/pbase";
 import styled from "styled-components";
 
+export const HContainer = styled.section`
+  max-width: 100%;
+  margin-bottom: 5rem;
+`;
+
+export const HHeader = styled.header`
+  display: flex;
+  justify-content: space-around;
+  padding: 4rem 1rem;
+  align-items: center;
+  font-size: 2rem;
+  border-bottom: 1px solid #b0e0e6;
+  box-sizing: border-box;
+  font-weight: 600;
+  width: 100%;
+
+  & nav {
+    & ul {
+      display: flex;
+      gap: 2rem;
+
+      & li {
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+`;
+
 interface UserAuth {
   token: string | null;
-  uid: string | null;
 }
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(auth.currentUser ? false : true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const router = useRouter();
   const [userAuth, setUserAuth] = useState<UserAuth>({
     token: "" | null,
-    uid: "" | null,
   });
 
   useEffect(() => {
-    setUserAuth({
-      token: localStorage.getItem("token"),
-      uid: localStorage.getItem("uid"),
-    });
+    // auth.onAuthStateChanged(user => {
+    //   if (user) setIsLoggedIn(true);
+    //   else setIsLoggedIn(false);
+    //   console.log(user, "asd", isLoggedIn);
+    // });
+    setUserAuth(sessionStorage.getItem("token"));
   }, [router.pathname]);
 
   const logout = async () => {
-    const res = await signOut(auth);
-    console.log(res, "ddd");
-    localStorage.clear();
-    setUserAuth({
-      token: null,
-      uid: null,
-    });
+    await signOut(auth).then(() => console.log("ddd 성공"));
+    setUserAuth(null);
+    sessionStorage.clear();
   };
 
-  console.log(isLoggedIn, auth.currentUser);
-
   return (
-    <section className="HContainer">
-      <header>
+    <HContainer>
+      <HHeader>
         <nav>
           <ul>
-            {userAuth.token ? (
+            {userAuth ? (
               <>
                 <li onClick={logout}>
                   <Link href="/home">
@@ -57,50 +81,23 @@ const Header = () => {
                 </li>
               </>
             ) : (
-              <li>
-                <Link href="/Login">
-                  <a>로그인</a>
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link href="/Login">
+                    <a>로그인</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/Signup">
+                    <a>회원가입</a>
+                  </Link>
+                </li>
+              </>
             )}
-
-            <li>
-              <Link href="/Signup">
-                <a>회원가입</a>
-              </Link>
-            </li>
           </ul>
         </nav>
-      </header>
-
-      <style jsx>
-        {`
-          ul,
-          li {
-            list-style: none;
-          }
-
-          a,
-          a:visited,
-          a:link,
-          a:active {
-            color: #000;
-            text-decoration: none;
-          }
-
-          .HContainer {
-            max-width: 1280px;
-          }
-
-          header > nav > ul {
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-            padding: 0;
-          }
-        `}
-      </style>
-    </section>
+      </HHeader>
+    </HContainer>
   );
 };
 
