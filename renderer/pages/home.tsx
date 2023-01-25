@@ -8,9 +8,11 @@ import { useRouter } from "next/router";
 import ChatBox from "./chat/ChatBox";
 
 const HContainer = styled.section`
-  max-width: 100%;
+  max-width: 128rem;
   display: flex;
   justify-content: center;
+  width: 100%;
+  margin: 0 auto;
 `;
 
 const NotAuthContainer = styled.div`

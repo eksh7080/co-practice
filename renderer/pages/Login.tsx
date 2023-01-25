@@ -129,7 +129,6 @@ const Login = () => {
             email,
             password,
           );
-          console.log(user, "useruseruseruseruseruseruseruseru");
           localStorage.setItem("token", user.accessToken);
           localStorage.setItem("uid", user.uid);
           localStorage.setItem("photo", user.photoURL);

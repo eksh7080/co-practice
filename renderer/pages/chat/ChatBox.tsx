@@ -7,23 +7,24 @@ import {
   limit,
 } from "firebase/firestore";
 import { auth, db } from "@/pbase";
-import Message from "./Message";
+import Message from "./Messages";
 import SendMessage from "./SendMessage";
+import { MessageData } from "@/types/User";
+import styled from "styled-components";
 
-interface UserData {
-  avatar: string | null;
-  createdAt: {
-    nanoseconds: number;
-    seconds: number;
-  };
-  name: string;
-  uid: string;
-  id: string;
-  text: string;
-}
+const ChatContainer = styled.section`
+  max-width: 60rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &.chatFrame {
+    border: 1px solid #000;
+  }
+`;
 
 const ChatBox = () => {
-  const [extractMessage, setExtractMessage] = useState<UserData[]>([]);
+  const [extractMessage, setExtractMessage] = useState<MessageData[]>([]);
   const scroll = useRef();
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const ChatBox = () => {
       orderBy("createdAt"),
       limit(50),
     );
-    console.log(dbMessages, "query query query query query");
 
     const unsubscribe = onSnapshot(dbMessages, querySnapshot => {
       let messageDatas = [];
@@ -45,21 +45,21 @@ const ChatBox = () => {
     return () => unsubscribe;
   }, []);
 
-  console.log(extractMessage);
+  console.log(extractMessage, "chat box chat box");
 
   return (
-    <main className="chat-box">
-      {/* <div className="messages-wrapper">
-        {extractMessage?.map(message => (
-          <Message key={message.id} message={extractMessage} />
+    <ChatContainer>
+      <div className="chatFrame">
+        {extractMessage.map(message => (
+          <Message key={message.id} message={message} />
         ))}
-      </div> */}
+      </div>
       {/* when a new message enters the chat, the screen scrolls dowwn to the scroll div */}
       {/* <span ref={scroll}></span> */}
       <SendMessage
       //  scroll={scroll}
       />
-    </main>
+    </ChatContainer>
   );
 };
 
