@@ -15,14 +15,14 @@ if (isProd) {
 
   const mainWindow = createWindow("main", {
     width: 1400,
-    height: 800,
+    height: 900,
   });
 
   if (isProd) {
-    await mainWindow.loadURL("app://./home.html");
+    await mainWindow.loadURL("app://./Home.html");
   } else {
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
+    await mainWindow.loadURL(`http://localhost:${port}/Home`);
     mainWindow.webContents.openDevTools();
   }
 })();
