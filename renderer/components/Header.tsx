@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { auth } from "@/pbase";
 import styled from "styled-components";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { UserAuth } from "@/types/User";
 
 const HContainer = styled.section`
   max-width: 100%;
@@ -36,19 +37,20 @@ const HHeader = styled.header`
   }
 `;
 
-interface UserAuth {
-  token: string | null;
-}
-
 const Header = () => {
   const router = useRouter();
   const [userAuth, setUserAuth] = useState<UserAuth>({
     token: "" | null,
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   // const [user] = useAuthState(auth);
   // console.log(user, "dhdkdhdkdk");
+
+  const logout = async () => {
+    await signOut(auth);
+    setUserAuth(null);
+    localStorage.clear();
+  };
 
   useEffect(() => {
     // auth.onAuthStateChanged(user => {
@@ -56,14 +58,8 @@ const Header = () => {
     //   else setIsLoggedIn(false);
     //   console.log(user, "asd", isLoggedIn);
     // });
-    setUserAuth(sessionStorage.getItem("token"));
+    setUserAuth(localStorage.getItem("token"));
   }, [router.pathname]);
-
-  const logout = async () => {
-    await signOut(auth).then(() => console.log("ddd 성공"));
-    setUserAuth(null);
-    sessionStorage.clear();
-  };
 
   return (
     <HContainer>
@@ -73,7 +69,7 @@ const Header = () => {
             {userAuth ? (
               <>
                 <li onClick={logout}>
-                  <Link href="/home">
+                  <Link href="/Home">
                     <a>로그아웃</a>
                   </Link>
                 </li>

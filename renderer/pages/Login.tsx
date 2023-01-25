@@ -108,7 +108,6 @@ const LoginSection = styled.div`
 const Login = () => {
   const dispatch = useUserDispatch();
   const router = useRouter();
-  const isUserExist = auth.currentUser;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -120,7 +119,7 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const signIn = (e: FormEvent<HTMLFormElement>) => {
+  const signIn = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setPersistence(auth, browserSessionPersistence)
@@ -130,11 +129,15 @@ const Login = () => {
             email,
             password,
           );
-          sessionStorage.setItem("token", user.accessToken);
+          console.log(user, "useruseruseruseruseruseruseruseru");
+          localStorage.setItem("token", user.accessToken);
+          localStorage.setItem("uid", user.uid);
+          localStorage.setItem("photo", user.photoURL);
+          localStorage.setItem("display", user.displayName);
         })
         .then(() => {
           alert("성공적으로 로그인 되었습니다.");
-          router.push("/home");
+          router.push("/Home");
         });
     } catch (error: unknown) {
       alert(error);
@@ -149,7 +152,7 @@ const Login = () => {
           <form onSubmit={signIn}>
             <div className="loginWrap">
               <h1>
-                <Link href="/home">
+                <Link href="/Home">
                   <a>LOGIN</a>
                 </Link>
               </h1>

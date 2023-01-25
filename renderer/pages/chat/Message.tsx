@@ -1,9 +1,9 @@
 import { auth } from "@/pbase";
 
 const Message = ({ message }) => {
-  console.log(message.uid);
+  console.log(message);
   return (
-    <div className={`chat-bubble ${message.uid === user.uid ? "right" : ""}`}>
+    <div>
       <img
         className="chat-bubble__left"
         src={message.avatar}

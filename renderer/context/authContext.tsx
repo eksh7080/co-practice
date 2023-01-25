@@ -9,19 +9,14 @@ const initialState: UserAuth = {
   token: "",
   uid: "",
 };
+
 function userReducer(state, action) {
   switch (action.type) {
     case "token":
       return {
         ...state,
         token: action.payload.token,
-        uid: action.payload.uid,
       };
-    // case "uid":
-    //   return {
-    //     ...state,
-    //     ,
-    //   };
   }
 }
 

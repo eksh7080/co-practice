@@ -125,7 +125,7 @@ const Signup = () => {
           uid: auth.currentUser.uid,
         });
         alert("회원가입이 성공적으로 완료되었습니다.");
-        router.push("/home");
+        router.push("/Home");
       }
     } catch (err: unknown) {
       console.log(err);
@@ -139,7 +139,7 @@ const Signup = () => {
         <div className="signupFrame">
           <form onSubmit={signUp}>
             <h1>
-              <Link href="/home">
+              <Link href="/Home">
                 <a>SIGN UP</a>
               </Link>
             </h1>

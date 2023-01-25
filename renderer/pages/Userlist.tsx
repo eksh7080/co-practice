@@ -6,16 +6,7 @@ import Heads from "@/components/Heads";
 import Profile from "public/images/profile.png";
 import Image from "next/image";
 import Link from "next/link";
-
-interface UserData {
-  avatar: string | null;
-  createdAt: {
-    nanoseconds: number;
-    seconds: number;
-  };
-  name: string;
-  uid: string;
-}
+import { UserAuth } from "@/types/User";
 
 const ListContainer = styled.section`
   max-width: 128rem;
