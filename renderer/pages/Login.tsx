@@ -11,11 +11,11 @@ import { useRouter } from "next/router";
 import { useUserDispatch } from "@/context/authContext";
 import styled from "styled-components";
 
-export const LoginContainer = styled.section`
+const LoginContainer = styled.section`
   display: flex;
 `;
 
-export const LoginSection = styled.div`
+const LoginSection = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -136,8 +136,8 @@ const Login = () => {
           alert("성공적으로 로그인 되었습니다.");
           router.push("/home");
         });
-    } catch (err: unknown) {
-      console.log(err);
+    } catch (error: unknown) {
+      alert(error);
     }
   };
 

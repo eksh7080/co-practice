@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
 
-export const SignUpContainer = styled.div`
+const SignUpContainer = styled.div`
   display: flex;
   justify-content: center;
   max-width: 128rem;

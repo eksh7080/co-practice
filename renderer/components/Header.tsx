@@ -4,13 +4,14 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "@/pbase";
 import styled from "styled-components";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-export const HContainer = styled.section`
+const HContainer = styled.section`
   max-width: 100%;
   margin-bottom: 5rem;
 `;
 
-export const HHeader = styled.header`
+const HHeader = styled.header`
   display: flex;
   justify-content: space-around;
   padding: 4rem 1rem;
@@ -40,12 +41,14 @@ interface UserAuth {
 }
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const router = useRouter();
   const [userAuth, setUserAuth] = useState<UserAuth>({
     token: "" | null,
   });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const [user] = useAuthState(auth);
+  // console.log(user, "dhdkdhdkdk");
 
   useEffect(() => {
     // auth.onAuthStateChanged(user => {

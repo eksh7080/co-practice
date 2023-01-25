@@ -3,6 +3,9 @@ import { db } from "@/pbase";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Heads from "@/components/Heads";
+import Profile from "public/images/profile.png";
+import Image from "next/image";
+import Link from "next/link";
 
 interface UserData {
   avatar: string | null;
@@ -15,10 +18,31 @@ interface UserData {
 }
 
 const ListContainer = styled.section`
-  max-width: 1280px;
+  max-width: 128rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
+
+  & article {
+    max-width: 46rem;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    & ul {
+      & li {
+        text-align: center;
+        font-size: 2rem;
+        &:hover {
+          cursor: pointer;
+          transfrom: scale(1.05);
+          transition: scale 0.4s;
+        }
+      }
+    }
+  }
 `;
 
 const UserList = () => {
@@ -40,16 +64,26 @@ const UserList = () => {
   }, []);
 
   return (
-    <ListContainer>
+    <>
       <Heads title="UserList" />
-      {user.map(tem => (
-        <article key={tem.uid}>
-          <ul>
-            <li>{tem.name}</li>
-          </ul>
-        </article>
-      ))}
-    </ListContainer>
+
+      <ListContainer>
+        {user.map(tem => (
+          <article key={tem.uid}>
+            <ul>
+              {tem.avatar ? (
+                <li>이미지가 존재하지 않습니다.</li>
+              ) : (
+                <li>
+                  <Image src={Profile} alt="profile" width={48} height={48} />
+                </li>
+              )}
+              <li>{tem.name}</li>
+            </ul>
+          </article>
+        ))}
+      </ListContainer>
+    </>
   );
 };
 
