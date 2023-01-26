@@ -33,8 +33,6 @@ const PrivateChatHome = () => {
     });
   }, []);
 
-  console.log(data.chatId, " chat chat Id");
-
   return (
     <PrivateChatContainer>
       <ChatUserList chatUsers={chatUsers} currentUserInfo={currentUserInfo} />

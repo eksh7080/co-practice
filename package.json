@@ -13,7 +13,6 @@
   "dependencies": {
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
-    "firebase": "^9.16.0",
     "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
   },
@@ -22,6 +21,7 @@
     "@types/react": "^18.0.26",
     "electron": "^21.3.3",
     "electron-builder": "^23.6.0",
+    "firebase": "^9.16.0",
     "next": "^12.3.4",
     "nextron": "^8.4.0",
     "react": "^18.2.0",
