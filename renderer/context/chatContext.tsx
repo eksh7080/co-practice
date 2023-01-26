@@ -6,8 +6,12 @@ import {
   useState,
 } from "react";
 
+enum TypeDis {
+  CHANGE_USER = "CHANGE_USER",
+}
+
 interface DispatchType {
-  type: string;
+  type: TypeDis;
   payload: {
     uid?: string;
     displayName?: string;
