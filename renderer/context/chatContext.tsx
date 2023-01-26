@@ -9,9 +9,9 @@ import {
 interface DispatchType {
   type: string;
   payload: {
-    uid: string;
-    displayName: string;
-    photoURL: string | null;
+    uid?: string;
+    displayName?: string;
+    photoURL?: string | null;
   };
 }
 
@@ -32,7 +32,7 @@ export const ChatContextProvider = ({ children }) => {
     },
   };
 
-  const chatReducer = (state, action: DispatchType) => {
+  const chatReducer = (state: string, action: DispatchType): string => {
     console.log(action, "action");
     switch (action.type) {
       case "CHANGE_USER":
