@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import Heads from "@/components/Heads";
 import { auth } from "@/pbase";
@@ -8,7 +8,6 @@ import {
   setPersistence,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useUserDispatch } from "@/context/authContext";
 import styled from "styled-components";
 
 const LoginContainer = styled.section`
@@ -106,7 +105,6 @@ const LoginSection = styled.div`
 `;
 
 const Login = () => {
-  const dispatch = useUserDispatch();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,7 +117,7 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const signIn = (e: SubmitEvent<HTMLFormElement>) => {
+  const signIn = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setPersistence(auth, browserSessionPersistence)
@@ -129,8 +127,7 @@ const Login = () => {
             email,
             password,
           );
-          console.log(user, "useruseruseruseruseruseruseruseru");
-          localStorage.setItem("token", user.accessToken);
+          localStorage.setItem("token", user.refreshToken);
           localStorage.setItem("uid", user.uid);
           localStorage.setItem("photo", user.photoURL);
           localStorage.setItem("display", user.displayName);

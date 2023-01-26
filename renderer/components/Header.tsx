@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "@/pbase";
 import styled from "styled-components";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { UserAuth } from "@/types/User";
+import { ChatContext } from "@/context/chatContext";
 
 const HContainer = styled.section`
   max-width: 100%;
@@ -39,26 +38,32 @@ const HHeader = styled.header`
 
 const Header = () => {
   const router = useRouter();
-  const [userAuth, setUserAuth] = useState<UserAuth>({
-    token: "" | null,
-  });
+  const { dispatch } = useContext(ChatContext);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [user] = useAuthState(auth);
-  // console.log(user, "dhdkdhdkdk");
 
   const logout = async () => {
     await signOut(auth);
-    setUserAuth(null);
+    setIsLoggedIn(false);
     localStorage.clear();
+    dispatch({
+      type: "CHANGE_USER",
+      payload: {
+        chatId: "",
+        user: {
+          chatId: null,
+          user: {
+            displayName: "",
+            photoURL: null,
+            uid: "",
+          },
+        },
+      },
+    });
   };
 
   useEffect(() => {
-    // auth.onAuthStateChanged(user => {
-    //   if (user) setIsLoggedIn(true);
-    //   else setIsLoggedIn(false);
-    //   console.log(user, "asd", isLoggedIn);
-    // });
-    setUserAuth(localStorage.getItem("token"));
+    setIsLoggedIn(localStorage.getItem("token") ? true : false);
   }, [router.pathname]);
 
   return (
@@ -66,7 +71,10 @@ const Header = () => {
       <HHeader>
         <nav>
           <ul>
-            {userAuth ? (
+            <li>
+              <Link href="/Home">Home</Link>
+            </li>
+            {isLoggedIn ? (
               <>
                 <li onClick={logout}>
                   <Link href="/Home">
@@ -76,6 +84,11 @@ const Header = () => {
                 <li>
                   <Link href="/Userlist">
                     <a>유저 목록</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privateChat/PrivateChatHome">
+                    <a>1:1 채팅</a>
                   </Link>
                 </li>
               </>

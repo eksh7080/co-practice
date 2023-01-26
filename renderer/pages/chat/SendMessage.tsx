@@ -1,17 +1,35 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { auth, db } from "@/pbase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+  doc,
+  arrayUnion,
+  Timestamp,
+} from "firebase/firestore";
 import styled from "styled-components";
 import { CurrentUser } from "@/types/User";
+import { v4 as uuid } from "uuid";
+import { ChatContext } from "@/context/chatContext";
 
 const SubmitForm = styled.form`
-  border: 1px solid black;
-  max-width: 128rem;
-  padding: 2rem;
+  max-width: 80rem;
+  padding: 2rem 0;
 
   & input[type="text"] {
     padding: 1rem;
     border: 1px solid #b0e0e6;
+    width: calc(100% - 10rem);
+    border-radius: 0.4rem;
   }
 
   & button[type="submit"] {
@@ -19,6 +37,8 @@ const SubmitForm = styled.form`
     border: 1px solid #b0e0e6;
     padding: 1rem;
     margin-left: 0.4rem;
+    width: calc(10%);
+    border-radius: 0.4rem;
 
     &:hover {
       cursor: pointer;
@@ -26,13 +46,15 @@ const SubmitForm = styled.form`
   }
 `;
 
-const SendMessage = ({ scroll }) => {
-  const [messageValue, setMessageValue] = useState("");
+const SendMessage = () => {
   const [currentUserInfo, setCurrentUserInfo] = useState<CurrentUser>({
-    displayName: "" | null,
-    photoURL: "" | null,
-    uid: "" | null,
+    displayName: "",
+    photoURL: null,
+    uid: "",
   });
+  const [sendMessageValue, setSendMessageValue] = useState("");
+
+  const { data } = useContext(ChatContext);
 
   useEffect(() => {
     setCurrentUserInfo({
@@ -44,32 +66,27 @@ const SendMessage = ({ scroll }) => {
   }, []);
 
   const changeMsgValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessageValue(e.target.value);
+    setSendMessageValue(e.target.value);
   };
 
-  const sendMessage = async (e: SubmitEvent<HTMLFormElement>) => {
+  const privateSendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (messageValue.trim() === "") {
-      alert("메세지를 입력해주세요.");
-      return;
+    if (currentUserInfo.uid) {
+      await updateDoc(doc(db, "chats", data.chatId), {
+        messages: arrayUnion({
+          id: uuid(),
+          sendMessageValue,
+          senderId: currentUserInfo.uid,
+          displayName: currentUserInfo.displayName,
+          data: Timestamp.now(),
+        }),
+      });
     }
-
-    // const { uid, displayName, photoURL } = auth.currentUser;
-
-    await addDoc(collection(db, "messages"), {
-      text: messageValue,
-      name: currentUserInfo.displayName,
-      avatar: currentUserInfo.photoURL,
-      createdAt: serverTimestamp(),
-      uid: currentUserInfo.uid,
-    });
-    setMessageValue("");
-    // scroll.current.scrollIntoView({ behavior: "smooth" });
+    setSendMessageValue("");
   };
 
   return (
-    <SubmitForm onSubmit={sendMessage}>
+    <SubmitForm onSubmit={privateSendMessage}>
       <label htmlFor="writeMessage" hidden>
         Enter Message
       </label>
@@ -77,8 +94,8 @@ const SendMessage = ({ scroll }) => {
         id="writeMessage"
         name="writeMessage"
         type="text"
+        value={sendMessageValue}
         placeholder="메세지 입력"
-        value={messageValue}
         onChange={changeMsgValue}
       />
       <button type="submit">전송</button>

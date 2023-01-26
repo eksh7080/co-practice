@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import Heads from "@/components/Heads";
 import styled from "styled-components";
-import { Rooms } from "./Rooms";
 import { useRouter } from "next/router";
-import ChatBox from "./chat/ChatBox";
 
 const HContainer = styled.section`
-  max-width: 100%;
+  max-width: 128rem;
   display: flex;
   justify-content: center;
+  width: 100%;
+  margin: 0 auto;
 `;
 
 const NotAuthContainer = styled.div`
@@ -30,21 +29,19 @@ const NotAuthContainer = styled.div`
 
 function Home() {
   const router = useRouter();
-  const [userAuth, setUserAuth] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setUserAuth(localStorage.getItem("token") ? true : false);
-  }, [router.pathname]);
-
-  console.log(userAuth);
+    setIsLoggedIn(localStorage.getItem("token") ? true : false);
+  }, [isLoggedIn, router.pathname]);
 
   return (
     <>
       <HContainer>
         <Heads title="Home" />
 
-        {userAuth ? (
-          <ChatBox />
+        {isLoggedIn ? (
+          <h1>로그인이 완료되었습니다.</h1>
         ) : (
           <NotAuthContainer>
             <h1>이곳은 홈페이지 입니다.</h1>

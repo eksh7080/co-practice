@@ -5,18 +5,16 @@ import styled from "styled-components";
 import Heads from "@/components/Heads";
 import Profile from "public/images/profile.png";
 import Image from "next/image";
-import Link from "next/link";
-import { UserAuth } from "@/types/User";
+import { UserData } from "@/types/User";
 
 const ListContainer = styled.section`
-  max-width: 128rem;
+  max-width: 60rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
 
   & article {
-    max-width: 46rem;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -39,7 +37,8 @@ const ListContainer = styled.section`
 const UserList = () => {
   const [user, setUser] = useState<UserData[]>([]);
   const userList: UserData = [];
-  const users = async () => {
+
+  const getUserInfo = async () => {
     const res = await getDocs(collection(db, "userInfo"));
     res.docs.forEach(list => {
       //   const newData = [];
@@ -51,7 +50,7 @@ const UserList = () => {
   };
 
   useEffect(() => {
-    users();
+    getUserInfo();
   }, []);
 
   return (
@@ -66,7 +65,9 @@ const UserList = () => {
                 <li>이미지가 존재하지 않습니다.</li>
               ) : (
                 <li>
-                  <Image src={Profile} alt="profile" width={48} height={48} />
+                  <a>
+                    <Image src={Profile} alt="profile" width={48} height={48} />
+                  </a>
                 </li>
               )}
               <li>{tem.name}</li>
