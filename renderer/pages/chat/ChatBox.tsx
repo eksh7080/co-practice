@@ -1,64 +1,64 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  query,
-  collection,
-  orderBy,
-  onSnapshot,
-  limit,
-} from "firebase/firestore";
+import React, { useEffect, useState, useContext } from "react";
+import { onSnapshot, doc } from "firebase/firestore";
 import { auth, db } from "@/pbase";
+import { MessageData } from "@/types/User";
+import { ChatContext } from "@/context/chatContext";
+import styled from "styled-components";
 import Message from "./Messages";
 import SendMessage from "./SendMessage";
-import { MessageData } from "@/types/User";
-import styled from "styled-components";
 
 const ChatContainer = styled.section`
-  max-width: 60rem;
+  max-width: 80rem;
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  justify-content: center;
+  border: 1px solid #000;
+  margin: 2rem auto 1rem;
+  min-height: 40rem;
 
-  &.chatFrame {
-    border: 1px solid #000;
+  & .chatFrame {
+    width: 100%;
+    padding: 4rem;
+
+    & h1 {
+      font-size: 2.4rem;
+      border-bottom: 1px solid lightblue;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+    }
+
+    & .messageFrame {
+      height: 50rem;
+      overflow-y: scroll;
+    }
   }
 `;
 
 const ChatBox = () => {
   const [extractMessage, setExtractMessage] = useState<MessageData[]>([]);
-  const scroll = useRef();
+  const [allMessages, setAllMessages] = useState([]);
+  const { data } = useContext(ChatContext);
 
   useEffect(() => {
-    const dbMessages = query(
-      collection(db, "messages"),
-      orderBy("createdAt"),
-      limit(50),
-    );
-
-    const unsubscribe = onSnapshot(dbMessages, querySnapshot => {
-      let messageDatas = [];
-      querySnapshot.forEach(msg => {
-        messageDatas.push({ ...msg.data(), id: msg.id });
-      });
-      setExtractMessage(messageDatas);
+    const getMessage = onSnapshot(doc(db, "chats", data.chatId), doc => {
+      doc.exists() && setAllMessages(doc.data().messages);
     });
 
-    return () => unsubscribe;
-  }, []);
-
-  console.log(extractMessage, "chat box chat box");
+    return () => {
+      getMessage();
+    };
+  }, [data.chatId]);
 
   return (
     <ChatContainer>
       <div className="chatFrame">
-        {extractMessage.map(message => (
-          <Message key={message.id} message={message} />
-        ))}
+        <h1>{data.user.displayName}님과 채팅중입니다.</h1>
+        <div className="messageFrame">
+          {allMessages.map(msg => (
+            <Message message={msg} key={msg.id} />
+          ))}
+        </div>
+        <SendMessage />
       </div>
-      {/* when a new message enters the chat, the screen scrolls dowwn to the scroll div */}
-      {/* <span ref={scroll}></span> */}
-      <SendMessage
-      //  scroll={scroll}
-      />
     </ChatContainer>
   );
 };

@@ -1,11 +1,13 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import styled from "styled-components";
 import Profile from "public/images/profile.png";
 import { MessageProps } from "@/types/User";
 
 const MessageFrame = styled.article`
   width: 100%;
+  padding: 1rem 0;
+  line-height: 2rem;
 
   .right {
     text-align: right;
@@ -37,27 +39,21 @@ const MessageFrame = styled.article`
 `;
 
 const Messages = ({ message }: MessageProps) => {
-  const [authUid, setAuthUid] = useState("");
+  const [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
-    setAuthUid(localStorage.getItem("uid"));
-  }, []);
+    setCurrentId(localStorage.getItem("uid"));
+  }, [currentId]);
 
   return (
     <MessageFrame>
-      <dl className={message.uid === authUid ? "right" : ""}>
-        {message.avatar ? (
-          <>
-            <dt>
-              <Image src={Profile} alt="profile" width={48} height={48} />
-              <small>{message.name}</small>
-            </dt>
-          </>
-        ) : (
-          <dt>이미지가 존재하지 않습니다.</dt>
-        )}
+      <dl className={message.senderId === currentId ? "right" : ""}>
+        <dt>
+          <Image src={Profile} alt="profile" width={48} height={48} />
+          <small>{message.displayName}</small>
+        </dt>
 
-        <dd>{message.text}</dd>
+        <dd>{message.sendMessageValue}</dd>
       </dl>
     </MessageFrame>
   );

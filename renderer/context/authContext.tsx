@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useReducer,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import { createContext, useState, useEffect } from "react";
 import { AuthContextType } from "@/types/User";
 import { useRouter } from "next/router";
 
@@ -21,6 +15,8 @@ export const AuthContextProvider = ({
     photo: "" | null,
     display: "" | null,
   });
+
+  const [userValue, setUserValue] = useState();
   const router = useRouter();
 
   useEffect(() => {
@@ -41,44 +37,3 @@ export const AuthContextProvider = ({
     </AuthContext.Provider>
   );
 };
-
-// const AuthDispatchContext = createContext("");
-
-// interface UserAuth {
-//   token: string | null;
-//   uid: string | null;
-// }
-
-// const initialState: UserAuth = {
-//   token: "",
-//   uid: "",
-// };
-
-// function userReducer(state, action) {
-//   switch (action.type) {
-//     case "token":
-//       return {
-//         ...state,
-//         token: action.payload.token,
-//       };
-//   }
-// }
-
-// export function AuthProvider({ children }) {
-//   const [user, dispatch] = useReducer(userReducer, initialState);
-//   return (
-//     <AuthContext.Provider value={user}>
-//       <AuthDispatchContext.Provider value={dispatch}>
-//         {children}
-//       </AuthDispatchContext.Provider>
-//     </AuthContext.Provider>
-//   );
-// }
-
-// export function useUserState() {
-//   return useContext(AuthContext);
-// }
-
-// export function useUserDispatch() {
-//   return useContext(AuthDispatchContext);
-// }

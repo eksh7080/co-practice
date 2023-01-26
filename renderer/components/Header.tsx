@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { UserAuth } from "@/types/User";
 import { AuthContext } from "@/context/authContext";
+import { ChatContext } from "@/context/chatContext";
 
 const HContainer = styled.section`
   max-width: 100%;
@@ -40,23 +41,21 @@ const HHeader = styled.header`
 
 const Header = () => {
   const router = useRouter();
+  const { dispatch } = useContext(ChatContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [user] = useAuthState(auth);
-  // console.log(user, "dhdkdhdkdk");
 
   const logout = async () => {
     await signOut(auth);
     setIsLoggedIn(false);
     localStorage.clear();
+    dispatch({
+      type: "CHANGE_USER",
+      payload: { chatId: "", user: { chatId: null, user: {} } },
+    });
   };
 
   useEffect(() => {
-    // auth.onAuthStateChanged(user => {
-    //   if (user) setIsLoggedIn(true);
-    //   else setIsLoggedIn(false);
-    //   console.log(user, "asd", isLoggedIn);
-    // });
     setIsLoggedIn(localStorage.getItem("token") ? true : false);
   }, [router.pathname]);
 

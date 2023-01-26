@@ -2,18 +2,17 @@ import styled from "styled-components";
 import Profile from "public/images/profile.png";
 import { ChatUserProps } from "@/types/User";
 import Image from "next/image";
-import { useContext } from "react";
-import { useRouter } from "next/router";
+import { useContext, useState, useEffect } from "react";
 import {
-  getDocs,
   getDoc,
   setDoc,
   doc,
   updateDoc,
   serverTimestamp,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/pbase";
-import { AuthContext } from "@/context/authContext";
+import { ChatContext } from "@/context/chatContext";
 
 const ChatUsers = styled.section`
   max-width: 60rem;
@@ -50,7 +49,28 @@ const ChatUsers = styled.section`
 `;
 
 const ChatUserList = ({ chatUsers, currentUserInfo }: ChatUserProps) => {
-  const router = useRouter();
+  const [chats, setChats] = useState<string[]>([]);
+
+  const { dispatch } = useContext(ChatContext);
+
+  const chatId = Object.entries(chats);
+
+  useEffect(() => {
+    const getChats = () => {
+      const userChat = onSnapshot(
+        doc(db, "userChats", currentUserInfo.uid),
+        doc => {
+          setChats(doc.data());
+        },
+      );
+
+      return () => {
+        userChat();
+      };
+    };
+
+    currentUserInfo.uid && getChats();
+  }, [currentUserInfo.uid]);
 
   const creatChatRoom = async (
     displayName: string,
@@ -61,7 +81,6 @@ const ChatUserList = ({ chatUsers, currentUserInfo }: ChatUserProps) => {
       currentUserInfo.uid > userId
         ? currentUserInfo.uid + userId
         : userId + currentUserInfo.uid;
-    console.log(combinedId, "콤바인 아이디");
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
@@ -86,6 +105,8 @@ const ChatUserList = ({ chatUsers, currentUserInfo }: ChatUserProps) => {
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
+
+      dispatch({ type: "CHANGE_USER", payload: chatId[0][1].userInfo });
     } catch (error: unknown) {
       console.log(error);
     }
