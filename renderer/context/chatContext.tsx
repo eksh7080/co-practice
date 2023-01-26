@@ -31,7 +31,7 @@ interface StateType {
   };
 }
 
-export const ChatContext = createContext();
+export const ChatContext = createContext<any | null>(null);
 export const ChatContextProvider = ({ children }) => {
   const [currentId, setCurrentId] = useState("");
 
