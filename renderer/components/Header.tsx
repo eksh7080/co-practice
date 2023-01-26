@@ -4,9 +4,6 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "@/pbase";
 import styled from "styled-components";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { UserAuth } from "@/types/User";
-import { AuthContext } from "@/context/authContext";
 import { ChatContext } from "@/context/chatContext";
 
 const HContainer = styled.section`
