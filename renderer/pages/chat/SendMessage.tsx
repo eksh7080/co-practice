@@ -88,7 +88,6 @@ const SendMessage = () => {
       });
     }
     setSendMessageValue("");
-    console.log("send success");
   };
 
   return (

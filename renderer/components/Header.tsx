@@ -48,7 +48,17 @@ const Header = () => {
     localStorage.clear();
     dispatch({
       type: "CHANGE_USER",
-      payload: { chatId: "", user: { chatId: null, user: {} } },
+      payload: {
+        chatId: "",
+        user: {
+          chatId: null,
+          user: {
+            displayName: "",
+            photoURL: null,
+            uid: "",
+          },
+        },
+      },
     });
   };
 
