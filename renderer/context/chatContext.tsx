@@ -32,7 +32,7 @@ export const ChatContextProvider = ({ children }) => {
     },
   };
 
-  const chatReducer = (state, action): DispatchType => {
+  const chatReducer = (state, action: DispatchType) => {
     switch (action.type) {
       case "CHANGE_USER":
         return {
