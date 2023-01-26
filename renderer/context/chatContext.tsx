@@ -19,6 +19,18 @@ interface DispatchType {
   };
 }
 
+interface StateType {
+  chatId: string | null;
+  user: {
+    chatId: string | null;
+    user: {
+      uid?: string;
+      displayName?: string;
+      photoURL?: string | null;
+    };
+  };
+}
+
 export const ChatContext = createContext();
 export const ChatContextProvider = ({ children }) => {
   const [currentId, setCurrentId] = useState("");
@@ -36,16 +48,16 @@ export const ChatContextProvider = ({ children }) => {
     },
   };
 
-  const chatReducer = (state: string, action: DispatchType): string => {
-    console.log(action, "action");
+  const chatReducer = (state: StateType, action: DispatchType): StateType => {
+    console.log(action, "action", state);
     switch (action.type) {
       case "CHANGE_USER":
         return {
-          user: action.payload,
           chatId:
             currentId > action.payload.uid
               ? currentId + action.payload.uid
               : action.payload.uid + currentId,
+          user: action.payload,
         };
 
       default:
