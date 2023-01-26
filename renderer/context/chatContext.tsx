@@ -6,8 +6,16 @@ import {
   useState,
 } from "react";
 
+interface DispatchType {
+  chatId: string | null;
+  user: {
+    uid: string;
+    displayName: string;
+    photoURL: string | null;
+  };
+}
+
 export const ChatContext = createContext();
-export type AppDispatch = typeof store.dispatch;
 export const ChatContextProvider = ({ children }) => {
   const [currentId, setCurrentId] = useState("");
 
@@ -20,7 +28,7 @@ export const ChatContextProvider = ({ children }) => {
     user: {},
   };
 
-  const chatReducer = (state, action) => {
+  const chatReducer = (state, action): DispatchType => {
     switch (action.type) {
       case "CHANGE_USER":
         return {
@@ -37,7 +45,6 @@ export const ChatContextProvider = ({ children }) => {
   };
 
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
-  console.log(state, " state");
   return (
     <ChatContext.Provider value={{ data: state, dispatch }}>
       {children}
