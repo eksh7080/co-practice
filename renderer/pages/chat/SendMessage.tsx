@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { auth, db } from "@/pbase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import styled from "styled-components";
@@ -26,8 +32,12 @@ const SubmitForm = styled.form`
   }
 `;
 
-const SendMessage = ({ scroll }) => {
-  const [messageValue, setMessageValue] = useState("");
+type PropFn = {
+  privateSendMessage: () => void;
+  setMessageValue: DisPatch<SetStateAction>;
+};
+
+const SendMessage = ({ privateSendMessage, setMessageValue }: PropFn) => {
   const [currentUserInfo, setCurrentUserInfo] = useState<CurrentUser>({
     displayName: "" | null,
     photoURL: "" | null,
@@ -47,29 +57,27 @@ const SendMessage = ({ scroll }) => {
     setMessageValue(e.target.value);
   };
 
-  const sendMessage = async (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const sendMessage = async (e: SubmitEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (messageValue.trim() === "") {
-      alert("메세지를 입력해주세요.");
-      return;
-    }
+  //   if (messageValue.trim() === "") {
+  //     alert("메세지를 입력해주세요.");
+  //     return;
+  //   }
 
-    // const { uid, displayName, photoURL } = auth.currentUser;
-
-    await addDoc(collection(db, "messages"), {
-      text: messageValue,
-      name: currentUserInfo.displayName,
-      avatar: currentUserInfo.photoURL,
-      createdAt: serverTimestamp(),
-      uid: currentUserInfo.uid,
-    });
-    setMessageValue("");
-    // scroll.current.scrollIntoView({ behavior: "smooth" });
-  };
+  //   await addDoc(collection(db, "messages"), {
+  //     text: messageValue,
+  //     name: currentUserInfo.displayName,
+  //     avatar: currentUserInfo.photoURL,
+  //     createdAt: serverTimestamp(),
+  //     uid: currentUserInfo.uid,
+  //   });
+  //   setMessageValue("");
+  //   // scroll.current.scrollIntoView({ behavior: "smooth" });
+  // };
 
   return (
-    <SubmitForm onSubmit={sendMessage}>
+    <SubmitForm onSubmit={privateSendMessage}>
       <label htmlFor="writeMessage" hidden>
         Enter Message
       </label>
@@ -78,7 +86,6 @@ const SendMessage = ({ scroll }) => {
         name="writeMessage"
         type="text"
         placeholder="메세지 입력"
-        value={messageValue}
         onChange={changeMsgValue}
       />
       <button type="submit">전송</button>

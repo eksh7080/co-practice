@@ -124,6 +124,9 @@ const Signup = () => {
           createdAt: serverTimestamp(),
           uid: auth.currentUser.uid,
         });
+
+        await setDoc(doc(db, "userChats", auth.currentUser.uid), {});
+
         alert("회원가입이 성공적으로 완료되었습니다.");
         router.push("/Home");
       }

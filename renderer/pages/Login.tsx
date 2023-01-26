@@ -8,7 +8,6 @@ import {
   setPersistence,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useUserDispatch } from "@/context/authContext";
 import styled from "styled-components";
 
 const LoginContainer = styled.section`
@@ -106,7 +105,6 @@ const LoginSection = styled.div`
 `;
 
 const Login = () => {
-  const dispatch = useUserDispatch();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -51,6 +51,13 @@ export interface SetChatProps {
 
 export interface UserData extends ChatUserProps {
   chatUsers: UserData;
-  currentId: string;
+  currentUserInfo: CurrentUser;
   setReceiverData: Dispatch<SetStateAction>;
+}
+
+export interface AuthContextType {
+  uid: string;
+  token: string;
+  photo: string | null;
+  display: string | null;
 }

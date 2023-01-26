@@ -2,7 +2,18 @@ import styled from "styled-components";
 import Profile from "public/images/profile.png";
 import { ChatUserProps } from "@/types/User";
 import Image from "next/image";
+import { useContext } from "react";
 import { useRouter } from "next/router";
+import {
+  getDocs,
+  getDoc,
+  setDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "@/pbase";
+import { AuthContext } from "@/context/authContext";
 
 const ChatUsers = styled.section`
   max-width: 60rem;
@@ -38,32 +49,59 @@ const ChatUsers = styled.section`
   }
 `;
 
-const ChatUserList = ({
-  chatUsers,
-  currentId,
-  setChatUserRecive,
-}: ChatUserProps) => {
+const ChatUserList = ({ chatUsers, currentUserInfo }: ChatUserProps) => {
   const router = useRouter();
 
-  const handleToggle = (displayName, uid) => {
-    setChatUserRecive({
-      displayName: displayName,
-      uid: uid,
-    });
-    router.push(`/privateChat/${uid}`);
+  const creatChatRoom = async (
+    displayName: string,
+    userId: string,
+    avatar: string | null,
+  ) => {
+    const combinedId =
+      currentUserInfo.uid > userId
+        ? currentUserInfo.uid + userId
+        : userId + currentUserInfo.uid;
+    console.log(combinedId, "콤바인 아이디");
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
+
+      if (!res.exists()) {
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
+        await updateDoc(doc(db, "userChats", currentUserInfo.uid), {
+          [combinedId + ".userInfo"]: {
+            uid: userId,
+            displayName: displayName,
+            photoURL: avatar,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+
+        await updateDoc(doc(db, "userChats", userId), {
+          [combinedId + ".userInfo"]: {
+            uid: currentUserInfo.uid,
+            displayName: currentUserInfo.displayName,
+            photoURL: currentUserInfo.photoURL,
+          },
+          [combinedId + ".date"]: serverTimestamp(),
+        });
+      }
+    } catch (error: unknown) {
+      console.log(error);
+    }
   };
 
   return (
     <ChatUsers>
       <h1>1:1 채팅을 원하는 유저를 선택해주세요!!</h1>
       {chatUsers
-        .filter(curr => curr.uid !== currentId)
+        .filter(curr => curr.uid !== currentUserInfo.uid)
         .map((tem, idx) => {
           return (
             <article
               key={tem.uid}
               onClick={() => {
-                handleToggle(tem.name, tem.uid);
+                creatChatRoom(tem.name, tem.uid, tem.avatar);
               }}
             >
               <ul>

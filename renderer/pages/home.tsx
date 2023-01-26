@@ -32,21 +32,21 @@ const NotAuthContainer = styled.div`
 
 function Home() {
   const router = useRouter();
-  const [userAuth, setUserAuth] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setUserAuth(localStorage.getItem("token") ? true : false);
-  }, [router.pathname]);
+    setIsLoggedIn(localStorage.getItem("token") ? true : false);
+  }, [isLoggedIn]);
 
-  console.log(userAuth);
+  console.log(isLoggedIn, "hhagha");
 
   return (
     <>
       <HContainer>
         <Heads title="Home" />
 
-        {userAuth ? (
-          <ChatBox />
+        {isLoggedIn ? (
+          <h1>로그인이 완료되었습니다.</h1>
         ) : (
           <NotAuthContainer>
             <h1>이곳은 홈페이지 입니다.</h1>

@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Heads from "@/components/Heads";
 import Profile from "public/images/profile.png";
 import Image from "next/image";
-import Link from "next/link";
 import { UserData } from "@/types/User";
 
 const ListContainer = styled.section`
@@ -66,16 +65,9 @@ const UserList = () => {
                 <li>이미지가 존재하지 않습니다.</li>
               ) : (
                 <li>
-                  <Link href="/privateChat/PrivateChat">
-                    <a>
-                      <Image
-                        src={Profile}
-                        alt="profile"
-                        width={48}
-                        height={48}
-                      />
-                    </a>
-                  </Link>
+                  <a>
+                    <Image src={Profile} alt="profile" width={48} height={48} />
+                  </a>
                 </li>
               )}
               <li>{tem.name}</li>
