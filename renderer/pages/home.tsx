@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import Heads from "@/components/Heads";
 import styled from "styled-components";
-import { Rooms } from "./Rooms";
 import { useRouter } from "next/router";
-import ChatBox from "./chat/ChatBox";
 
 const HContainer = styled.section`
   max-width: 128rem;
@@ -36,9 +33,7 @@ function Home() {
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("token") ? true : false);
-  }, [isLoggedIn]);
-
-  console.log(isLoggedIn, "hhagha");
+  }, [isLoggedIn, router.pathname]);
 
   return (
     <>
