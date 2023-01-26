@@ -7,7 +7,7 @@ import {
 } from "react";
 
 export const ChatContext = createContext();
-
+export type AppDispatch = typeof store.dispatch;
 export const ChatContextProvider = ({ children }) => {
   const [currentId, setCurrentId] = useState("");
 
