@@ -7,8 +7,8 @@ import {
 } from "react";
 
 interface DispatchType {
-  chatId: string | null;
-  user: {
+  type: string;
+  payload: {
     uid: string;
     displayName: string;
     photoURL: string | null;
@@ -33,6 +33,7 @@ export const ChatContextProvider = ({ children }) => {
   };
 
   const chatReducer = (state, action: DispatchType) => {
+    console.log(action, "action");
     switch (action.type) {
       case "CHANGE_USER":
         return {
