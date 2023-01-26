@@ -40,23 +40,26 @@ export const ChatContextProvider = ({ children }) => {
   }, []);
 
   const INITIAL_STATE = {
-    chatId: "null",
+    chatId: "",
     user: {
-      uid: "",
-      displayName: "",
-      photoURL: "" | null,
+      chatId: "",
+      user: {
+        uid: "",
+        displayName: "",
+        photoURL: null,
+      },
     },
   };
 
-  const chatReducer = (state: StateType, action: DispatchType): StateType => {
+  const chatReducer = (state, action: DispatchType) => {
     switch (action.type) {
       case "CHANGE_USER":
         return {
+          user: action.payload,
           chatId:
             currentId > action.payload.uid
               ? currentId + action.payload.uid
               : action.payload.uid + currentId,
-          user: action.payload,
         };
 
       default:

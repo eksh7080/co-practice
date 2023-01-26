@@ -46,16 +46,11 @@ const SubmitForm = styled.form`
   }
 `;
 
-type PropFn = {
-  privateSendMessage: () => void;
-  setMessageValue: DisPatch<SetStateAction>;
-};
-
 const SendMessage = () => {
   const [currentUserInfo, setCurrentUserInfo] = useState<CurrentUser>({
-    displayName: "" | null,
-    photoURL: "" | null,
-    uid: "" | null,
+    displayName: "",
+    photoURL: null,
+    uid: "",
   });
   const [sendMessageValue, setSendMessageValue] = useState("");
 
@@ -74,7 +69,7 @@ const SendMessage = () => {
     setSendMessageValue(e.target.value);
   };
 
-  const privateSendMessage = async (e: SubmitEvent<HTMLFormElement>) => {
+  const privateSendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentUserInfo.uid) {
       await updateDoc(doc(db, "chats", data.chatId), {

@@ -38,7 +38,7 @@ const MessageFrame = styled.article`
   }
 `;
 
-const Messages = ({ message }: MessageProps) => {
+const Messages = ({ message }) => {
   const [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
