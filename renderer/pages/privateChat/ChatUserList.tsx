@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Profile from "public/images/profile.png";
-import { ChatUserProps } from "@/types/User";
 import Image from "next/image";
 import { useContext, useState, useEffect } from "react";
 import {
@@ -48,7 +47,7 @@ const ChatUsers = styled.section`
   }
 `;
 
-const ChatUserList = ({ chatUsers, currentUserInfo }: ChatUserProps) => {
+const ChatUserList = ({ chatUsers, currentUserInfo }) => {
   const [chats, setChats] = useState<string[]>([]);
 
   const { dispatch } = useContext(ChatContext);

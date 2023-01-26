@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { onSnapshot, doc } from "firebase/firestore";
 import { auth, db } from "@/pbase";
-import { MessageData } from "@/types/User";
 import { ChatContext } from "@/context/chatContext";
 import styled from "styled-components";
 import Message from "./Messages";
@@ -34,7 +33,6 @@ const ChatContainer = styled.section`
 `;
 
 const ChatBox = () => {
-  const [extractMessage, setExtractMessage] = useState<MessageData[]>([]);
   const [allMessages, setAllMessages] = useState([]);
   const { data } = useContext(ChatContext);
 
