@@ -25,7 +25,11 @@ export const ChatContextProvider = ({ children }) => {
 
   const INITIAL_STATE = {
     chatId: "null",
-    user: {},
+    user: {
+      uid: "",
+      displayName: "",
+      photoURL: "" | null,
+    },
   };
 
   const chatReducer = (state, action): DispatchType => {
